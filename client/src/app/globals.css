@@ -1,0 +1,11 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+	--custom-yellow-light: #fadc14;
+	--custom-yellow-dark: #f6c018;
+	--custom-blue-dark: #06275c;
+}
+
