@@ -2,7 +2,7 @@
 import List from "@/components/common/list";
 import Section from "@/components/common/section";
 import DashCard from "@/components/common/dashCard";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
 
@@ -138,7 +138,6 @@ if(isAdmin){
     </div>
     ):(<p className="text-4xl h-screen">Admin Access only</p>)
     }
-  
   </>
   )
 }

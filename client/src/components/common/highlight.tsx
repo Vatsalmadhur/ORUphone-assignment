@@ -1,5 +1,10 @@
 import React from "react";
-export default function Highlight({ subHeading, heading, text }: String) {
+interface highlightProps{
+	subHeading:string;
+	heading:string;
+	text:string;
+}
+export default function Highlight({ subHeading, heading, text }: highlightProps) {
 	return (
 		<>
 			<div className=" w-full h-[200px] mt-[100px] flex items-center justify-center">

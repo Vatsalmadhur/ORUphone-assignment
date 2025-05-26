@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 
 interface ProductPageProps {
-  params: { model: string };
+  params: any;
 }
 
 export default function ProductPage({ params }: ProductPageProps) {

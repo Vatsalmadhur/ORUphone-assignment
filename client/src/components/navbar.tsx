@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-
+import { Suspense } from 'react';
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -32,11 +32,11 @@ import {
 	PopoverTrigger,
 } from "@radix-ui/react-popover";
 import { toast } from "sonner";
+import TrackerWrapper from "./common/TrackerWrapper";
 
 export default function Navbar() {
 	const { userLoggedIn, userName, isAdmin } = useAuth();
 
-	useTracker();
 	const router = useRouter();
 	const handleNavigate = () => {
 		router.push("/login");
@@ -67,6 +67,9 @@ export default function Navbar() {
 
 	return (
 		<nav className="w-full h-[100px] pt-3 px-4 ">
+		<Suspense fallback={<div>Loading...</div>}>
+      <TrackerWrapper />
+    </Suspense>
 			<div className="w-full h-1/2 py-5  flex item-center justify-center gap-5">
 				<div
 					className="w-[10%] h-auto text-center pl-2 pt-2  flex items-center justify-center 
@@ -304,5 +307,5 @@ export default function Navbar() {
 				</NavigationMenu>
 			</div>
 		</nav>
-	);
+	)
 }
