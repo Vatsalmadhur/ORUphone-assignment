@@ -6,7 +6,7 @@ import Highlight from "@/components/common/highlight";
 import Spacer from "@/components/common/spacer";
 import Hero from "@/components/hero";
 import Marquee from "@/components/marquee";
-import React from "react";
+import React  from "react";
 export default function page() {
   return (
     <>

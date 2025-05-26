@@ -72,7 +72,7 @@ export default function AppSidebar() {
         <p className="text-md text-gray-500">Choose what suits you the best!</p>
         </div>
         <div className="w-full  px-4  text-md overflow-x-scroll">
-          <Accordion type="multiple" collapsible="true" className=" flex flex-row md:flex-col gap-5" >
+          <Accordion type="single" collapsible={true} className=" flex flex-row md:flex-col gap-5" >
             {Object.entries(sidebarData).map(([section, options]) => (
               <AccordionItem value={section} key={section}>
                 <AccordionTrigger className="md:text-lg text-sm text-gray-700 font-semibold">
