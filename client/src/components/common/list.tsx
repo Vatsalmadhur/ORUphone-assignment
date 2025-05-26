@@ -13,8 +13,10 @@ export default function List<T>({
       {data.map((item, index) => (
         <li key={index} className="flex justify-between">
           <span className="font-semibold text-gray-600">{decodeURIComponent(String(item[keyLabel]))}</span>
-          <span className="font-bold  text-[var(--custom-yellow-dark)] 
-">{String(item[valueLabel])}</span>
+          <span className="font-bold text-[var(--custom-yellow-dark)]">
+  {Number(item?.[valueLabel])?.toFixed(2)}
+</span>
+
         </li>
       ))}
     </ul>
