@@ -2,9 +2,11 @@ import {Client, QueryResult, QueryResultRow} from "pg";
  const client = new Client({
 	user: process.env.POSTGRES_USER,
 	password: process.env.POSTGRES_PASS,
-	host: "localhost",
-	port: 5432,
+	host: process.env.PG_HOST,
+	port:Number( process.env.PG_PORT || "5432") ,
 	database: "oru_user_tracking",
+	ssl: true
+
 });
 
  async function connectToDB() {

@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
@@ -12,7 +14,6 @@
     "@types/bcrypt": "^5.0.2",
     "@types/cors": "^2.8.18",
     "@types/geoip-lite": "^1.4.4",
-    "@types/ioredis": "^5.0.0",
     "@types/useragent": "^2.3.4",
     "bcrypt": "^6.0.0",
     "connect-redis": "^7.0.1",

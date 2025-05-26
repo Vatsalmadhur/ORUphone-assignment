@@ -5,8 +5,9 @@ let typeORMDB: DataSource;
 export default async function typeORMConnect(): Promise<void> {
   const dataSource = new DataSource({
     type: "postgres",
-    url: 'postgres://madhur:asdf1234@localhost:5432/oru_user_tracking',
+    url: process.env.PG_URI,
     entities: [
+      `${__dirname}/entities/*.entity.js`,
       `${__dirname}/entities/*.entity.ts`,
     ],
     synchronize: true,
