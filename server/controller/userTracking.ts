@@ -12,7 +12,6 @@ export default async function userTracking(req: Request, res: Response): Promise
 
   const event = req.body[0];
   const sessionData = req.session.userData;
-
   const sessionRepo = useTypeORM(UserSession);
   const visitRepo = useTypeORM(UserVisit);
   const actionRepo = useTypeORM(VisitAction);

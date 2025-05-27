@@ -4,6 +4,12 @@ import { UserVisit } from '../db/entities/UserVisit.entity';
 import { UserSession } from '../db/entities/UserSession.entity';
 import { VisitAction } from '../db/entities/VisitAction.entity';
 
+interface HourlyTrafficData {
+  hour: number;
+  count: number;
+  label: string; // "12 AM", "1 PM", etc.
+}
+
 export async function getAnalyticsReport(req: Request, res: Response) :Promise<void> {
   try {
     const dataSource = getDataSource();
@@ -118,7 +124,147 @@ const deviceCategories = Object.entries(categoryCount)
       ? userSessionCounts.reduce((sum, row) => sum + Number(row.sessionCount), 0) / userSessionCounts.length
       : 0;
 
-    // Final response
+  const browserData = await dataSource
+    .getRepository(UserSession)
+    .createQueryBuilder('session')
+    .select('session.browser', 'browser')
+    .addSelect('COUNT(*)', 'count')
+    .where('session.createdAt BETWEEN :start AND :end', { start, end })
+    .andWhere('session.browser != :unknown', { unknown: 'unknown' })
+    .groupBy('session.browser')
+    .orderBy('"count"', 'DESC')
+    .getRawMany();
+
+  const totalBrowser = browserData.reduce((sum, item) => sum + parseInt(item.count), 0);
+
+  const processedBrowserData = browserData.map(item => {
+    let browserName = item.browser;
+    
+    if (browserName.toLowerCase().includes('chrome')) {
+      browserName = 'Chrome';
+    } else if (browserName.toLowerCase().includes('safari') && !browserName.toLowerCase().includes('chrome')) {
+      browserName = 'Safari';
+    } else if (browserName.toLowerCase().includes('firefox')) {
+      browserName = 'Firefox';
+    } else if (browserName.toLowerCase().includes('edge')) {
+      browserName = 'Edge';
+    } else if (browserName.toLowerCase().includes('opera')) {
+      browserName = 'Opera';
+    } else if (browserName.toLowerCase().includes('internet explorer') || browserName.toLowerCase().includes('ie')) {
+      browserName = 'Internet Explorer';
+    } else {
+      browserName = browserName.split(' ')[0] || 'Other';
+    }
+
+    return {
+      name: browserName,
+      count: parseInt(item.count),
+      value: parseFloat(((parseInt(item.count) / totalBrowser) * 100).toFixed(1))
+    };
+  });
+
+    const osData = await dataSource
+    .getRepository(UserSession)
+    .createQueryBuilder('session')
+    .select('session.os', 'os')
+    .addSelect('COUNT(*)', 'count')
+    .where('session.createdAt BETWEEN :start AND :end', { start, end })
+    .andWhere('session.os != :unknown', { unknown: 'unknown' })
+    .groupBy('session.os')
+    .orderBy('"count"', 'DESC')
+    .getRawMany();
+
+  const totalOs = osData.reduce((sum, item) => sum + parseInt(item.count), 0);
+
+  const processedOsData = osData.map(item => {
+    let osName = item.os;
+    
+    // Extract main OS name
+    if (osName.toLowerCase().includes('windows')) {
+      osName = 'Windows';
+    } else if (osName.toLowerCase().includes('ios') || osName.toLowerCase().includes('iphone') || osName.toLowerCase().includes('ipad')) {
+      osName = 'iOS';
+    } else if (osName.toLowerCase().includes('android')) {
+      osName = 'Android';
+    } else if (osName.toLowerCase().includes('mac') || osName.toLowerCase().includes('darwin')) {
+      osName = 'macOS';
+    } else if (osName.toLowerCase().includes('linux')) {
+      osName = 'Linux';
+    } else if (osName.toLowerCase().includes('ubuntu')) {
+      osName = 'Ubuntu';
+    } else if (osName.toLowerCase().includes('chrome os') || osName.toLowerCase().includes('chromeos')) {
+      osName = 'Chrome OS';
+    } else {
+      osName = osName.split(' ')[0] || 'Other';
+    }
+
+    return {
+      name: osName,
+      count: parseInt(item.count),
+      value: parseFloat(((parseInt(item.count) / totalOs) * 100).toFixed(1))
+    };
+  });
+
+    const hourlyData = await dataSource
+    .getRepository(UserSession)
+    .createQueryBuilder('session')
+    .select('EXTRACT(HOUR FROM session.createdAt)', 'hour')
+    .addSelect('COUNT(*)', 'count')
+    .where('session.createdAt BETWEEN :start AND :end', { start, end })
+    .groupBy('EXTRACT(HOUR FROM session.createdAt)')
+    .orderBy('hour', 'ASC')
+    .getRawMany();
+
+  // Create array for all 24 hours (fill missing hours with 0)
+  const completeHourlyData: HourlyTrafficData[] = [];
+  
+  for (let hour = 0; hour < 24; hour++) {
+    const existingData = hourlyData.find(item => parseInt(item.hour) === hour);
+    const count = existingData ? parseInt(existingData.count) : 0;
+    
+    // Format hour label (12-hour format with AM/PM)
+    const label = hour === 0 ? '12 AM' 
+                : hour < 12 ? `${hour} AM`
+                : hour === 12 ? '12 PM'
+                : `${hour - 12} PM`;
+    
+    completeHourlyData.push({
+      hour,
+      count,
+      label
+    });
+  }
+ const locationData = await dataSource
+    .getRepository(UserSession)
+    .createQueryBuilder('session')
+    .select('session.location', 'location')
+    .addSelect('COUNT(*)', 'count')
+    .where('session.createdAt BETWEEN :start AND :end', { start, end })
+    .andWhere('session.location != :unknown', { unknown: 'unknown' })
+    .andWhere('session.location IS NOT NULL')
+    .andWhere('session.location != :empty', { empty: '' })
+    .groupBy('session.location')
+    .orderBy('"count"', 'DESC')
+    .getRawMany();
+
+  const totalLD = locationData.reduce((sum, item) => sum + parseInt(item.count), 0);
+
+  const processedLocationData = locationData.map(item => {
+    let locationName = item.location;
+    
+    locationName = locationName.trim();
+    
+    if (locationName.includes(',')) {
+      const parts = locationName.split(',');
+      locationName = parts[parts.length - 1].trim();
+    }
+
+    return {
+      name: locationName,
+      count: parseInt(item.count),
+      value: parseFloat(((parseInt(item.count) / totalLD) * 100).toFixed(1))
+    };
+  });
      res.json({
       totalUniqueVisits,
       topPages,
@@ -128,6 +274,10 @@ const deviceCategories = Object.entries(categoryCount)
       deviceCategories,
       loggedStatusStats,
       avgSessionsPerUser,
+      processedBrowserData,
+      processedOsData,
+      completeHourlyData,
+      processedLocationData
     });
 return;
   } catch (err) {

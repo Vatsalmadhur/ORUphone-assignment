@@ -11,8 +11,9 @@ import { connectToDB } from "./db/connectToDB";
 import typeORMConnect from "./db/typeorm";
 const app = express();
 const PORT = process.env.PORT || 4000;
+console.log(process.env.CORS_ORIGIN);
 app.use(cors({
-  origin: 'http://4.213.225.5:3000',
+  origin: process.env.CORS_ORIGIN,
   credentials: true
 }));
 app.use(express.json());
