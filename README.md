@@ -5,10 +5,9 @@ A comprehensive full-stack marketplace for buying and selling used smartphones w
 ## 🚀 Deployment
 - Frontend deployed at : [http://4.213.225.5:3000/](http://4.213.225.5:3000/)
 - Server deployed at : [http://4.213.225.5:4000/](http://4.213.225.5:4000/)
-
+## Architecture Diagram
+![Project Logo](architecture_diagram_oldphones.png)
 ## 🚀 Features
-
-
 
 ### User Management & Authentication
 - **User Registration & Login** - Secure authentication with bcrypt password hashing
