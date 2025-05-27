@@ -3,8 +3,8 @@
 A comprehensive full-stack marketplace for buying and selling used smartphones with **built-in user analytics and behavioral tracking**. 
 
 ## 🚀 Deployment
-Frontend deployed at : 
-Server deployed at :
+- Frontend deployed at : [http://4.213.225.5:3000/](http://4.213.225.5:3000/)
+- Server deployed at : [http://4.213.225.5:4000/](http://4.213.225.5:4000/)
 
 ## 🚀 Features
 
