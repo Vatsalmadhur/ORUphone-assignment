@@ -114,7 +114,7 @@ export default function Navbar() {
 					<div className="bg-gray-100 p-2 rounded-full hidden sm:block">
 						<BellIcon size={20} />
 					</div>
-					<div className="bg-gray-100 p-2 rounded-full absolute left-2">
+					<div className="bg-gray-100 p-2 rounded-full sm:static  absolute left-2">
 						{userLoggedIn ? (
 							<Popover>
 								<PopoverTrigger
@@ -130,9 +130,7 @@ export default function Navbar() {
 									<p className="text-2xl py-3">
 										Hello,
 										<span className="font-bold text-[var(--custom-yellow-dark)]">
-											{
-												userName
-											}
+												{userName}
 										</span>
 									</p>
 									{isAdmin ? (

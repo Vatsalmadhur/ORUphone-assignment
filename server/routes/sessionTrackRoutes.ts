@@ -5,6 +5,7 @@ import { getAnalyticsReport } from "../controller/adminController";
 import isAdmin from "../middlewares/admin"
 import { validateUserTracking,validateLogin,validateSignup } from "../middlewares/validation";
 import { validationResult } from "express-validator";
+import { adminRateLimiter, authRateLimiter } from "../middlewares/rate-limit";
 const router = Router();
 router.get("/session", (req: Request, res: Response) => {
     if (!req.session.userData) {
@@ -27,7 +28,7 @@ router.post(
   },
   userTracking
 );
-router.post('/register',  validateSignup,
+router.post('/register',authRateLimiter,  validateSignup,
   (req: Request, res: Response, next: NextFunction): void => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -37,7 +38,7 @@ router.post('/register',  validateSignup,
     next();
   },
 register);
-router.post('/login',  validateLogin,
+router.post('/login',authRateLimiter,  validateLogin,
   (req: Request, res: Response, next: NextFunction): void => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -48,5 +49,5 @@ router.post('/login',  validateLogin,
   },
 login)
 router.post('/logout',logout);
-router.get('/admin/analytics',isAdmin,getAnalyticsReport)
+router.get('/admin/analytics',adminRateLimiter, isAdmin,getAnalyticsReport)
 export default router;
