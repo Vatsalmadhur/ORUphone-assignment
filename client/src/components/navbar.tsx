@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Suspense } from 'react';
+import { Suspense } from "react";
 import {
 	NavigationMenu,
 	NavigationMenuContent,
@@ -47,14 +47,18 @@ export default function Navbar() {
 
 	const handleLogout = async () => {
 		try {
-			const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/logout`, {
-				method: "POST",
-				headers: {
-					"Content-type": "application/json",
-				},
-				credentials: "include",
-				body: JSON.stringify({ userName }),
-			});
+			const res = await fetch(
+				`${process.env.NEXT_PUBLIC_BASE_URL}/logout`,
+				{
+					method: "POST",
+					headers: {
+						"Content-type":
+							"application/json",
+					},
+					credentials: "include",
+					body: JSON.stringify({ userName }),
+				}
+			);
 			if (res.ok) {
 				toast("Logout successful");
 				router.push("/login");
@@ -67,65 +71,84 @@ export default function Navbar() {
 
 	return (
 		<nav className="w-full h-[100px] pt-3 px-4 ">
-		<Suspense fallback={<div>Loading...</div>}>
-      <TrackerWrapper />
-    </Suspense>
+			<Suspense fallback={<div>Loading...</div>}>
+				<TrackerWrapper />
+			</Suspense>
 			<div className="w-full h-1/2 py-5  flex item-center justify-center gap-5">
 				<div
 					className="w-[10%] h-auto text-center pl-2 pt-2  flex items-center justify-center 
 "
 				>
-					<Image
-						src="/OLDPhones4.svg"
-						width={120}
-						height={120}
-						alt="logo here"
-					/>
+					<a href="/">
+						<Image
+							src="/OLDPhones4.svg"
+							width={120}
+							height={120}
+							alt="logo here"
+							className="hidden sm:block"
+						/>
+					</a>
 				</div>
-				<div className="w-[10%] h-full flex items-center justify-center ">
-					<Button variant="outline" className="rounded-full border-gray-200">
+				<div className="w-[10%] h-full hidden sm:flex items-center justify-center ">
+					<Button
+						variant="outline"
+						className="rounded-full border-gray-200"
+					>
 						<LocationEditIcon /> India
 					</Button>
 				</div>
-				<div className="w-[60%] h-full flex gap-2 items-center justify-center  relative">
+				<div className="w-[60%] h-full sm:flex gap-2 items-center justify-center  hidden  relative">
 					<input
 						placeholder="Search phones with make,model..."
 						className="w-full bg-gray-100 rounded-full h-full p-5 focus:border-gray-200 focus:border focus:outline-none "
 					/>
-					<SearchIcon className="absolute right-4" size={20} />
+					<SearchIcon
+						className="absolute right-4"
+						size={20}
+					/>
 				</div>
 				<div className="w-[10%] h-full flex gap-5 justify-center items-center">
-					<div className="bg-gray-100 p-2 rounded-full">
+					<div className="bg-gray-100 p-2 rounded-full hidden sm:block">
 						<HeartIcon size={20} />
 					</div>
-					<div className="bg-gray-100 p-2 rounded-full">
+					<div className="bg-gray-100 p-2 rounded-full hidden sm:block">
 						<BellIcon size={20} />
 					</div>
-					<div className="bg-gray-100 p-2 rounded-full">
+					<div className="bg-gray-100 p-2 rounded-full sm:static  absolute left-2">
 						{userLoggedIn ? (
 							<Popover>
-								<PopoverTrigger asChild>
-									<CircleUser size={20} />
+								<PopoverTrigger
+									asChild
+								>
+									<CircleUser
+										size={
+											20
+										}
+									/>
 								</PopoverTrigger>
 								<PopoverContent className="z-10 w-[300px] text-center p-5 bg-white shadow-xl rounded-lg">
 									<p className="text-2xl py-3">
 										Hello,
 										<span className="font-bold text-[var(--custom-yellow-dark)]">
-											{userName}
+												{userName}
 										</span>
 									</p>
 									{isAdmin ? (
 										<Button
 											variant="yellow"
-											onClick={handleAdminNavigate}
+											onClick={
+												handleAdminNavigate
+											}
 											className="rounded-sm m-3"
 										>
 											Admin
 										</Button>
-									) : (null)}
+									) : null}
 									<Button
 										variant="yellow"
-										onClick={handleLogout}
+										onClick={
+											handleLogout
+										}
 										className="rounded-sm m-3"
 									>
 										Logout
@@ -142,16 +165,23 @@ export default function Navbar() {
  "
 				>
 					{userLoggedIn ? (
-						<Button variant="yellow">Sell your device</Button>
+						<Button variant="yellow" className="sm:block  absolute right-2">
+							Sell your device
+						</Button>
 					) : (
-						<Button variant="yellow" onClick={handleNavigate}>
+						<Button
+									className="sm:block  absolute right-2"
+
+							variant="yellow"
+							onClick={handleNavigate}
+						>
 							Sign In
 						</Button>
 					)}
 				</div>
 			</div>
 
-			<div className="w-full h-1/2 flex items-center justify-center gap-2  border-bottom border-gray-50 py-5">
+			<div className="w-full sm:h-1/2 flex items-center justify-center gap-2  border-bottom border-gray-50 py-5 sm:overflow-hidden h-auto overflow-x-scroll">
 				<NavigationMenu className="list-none">
 					<NavigationMenuLink className="px-4 py-2 font-medium ">
 						Register a Store
@@ -161,25 +191,33 @@ export default function Navbar() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-							<NavigationMenuTrigger>Buy Used Phones</NavigationMenuTrigger>
+							<NavigationMenuTrigger>
+								Buy Used Phones
+							</NavigationMenuTrigger>
 							<NavigationMenuContent className="min-w-[200px] border-white bg-white font-semibold">
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Nearby Deals
+									Nearby
+									Deals
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Best Deals
+									Best
+									Deals
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									With Warranty
+									With
+									Warranty
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Refurbished Phones
+									Refurbished
+									Phones
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Compare Prices
+									Compare
+									Prices
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Top Brands
+									Top
+									Brands
 								</NavigationMenuLink>
 							</NavigationMenuContent>
 						</NavigationMenuItem>
@@ -189,19 +227,27 @@ export default function Navbar() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-							<NavigationMenuTrigger>Sell Used Phones</NavigationMenuTrigger>
+							<NavigationMenuTrigger>
+								Sell Used Phones
+							</NavigationMenuTrigger>
 							<NavigationMenuContent className="min-w-[200px] border-white bg-white font-semibold">
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Sell Your Phone
+									Sell
+									Your
+									Phone
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Compare Prices
+									Compare
+									Prices
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Open Online Store/Shop
+									Open
+									Online
+									Store/Shop
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Top Brands
+									Top
+									Brands
 								</NavigationMenuLink>
 							</NavigationMenuContent>
 						</NavigationMenuItem>
@@ -211,13 +257,19 @@ export default function Navbar() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-							<NavigationMenuTrigger>Compare Prices</NavigationMenuTrigger>
+							<NavigationMenuTrigger>
+								Compare Prices
+							</NavigationMenuTrigger>
 							<NavigationMenuContent className="min-w-[200px] border-white bg-white font-semibold">
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Compare when Buying
+									Compare
+									when
+									Buying
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Compare when Selling
+									Compare
+									when
+									Selling
 								</NavigationMenuLink>
 							</NavigationMenuContent>
 						</NavigationMenuItem>
@@ -227,37 +279,54 @@ export default function Navbar() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-							<NavigationMenuTrigger>Services</NavigationMenuTrigger>
+							<NavigationMenuTrigger>
+								Services
+							</NavigationMenuTrigger>
 							<NavigationMenuContent className="min-w-[200px] border-white bg-white font-semibold">
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									IMEI Check
+									IMEI
+									Check
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Phone Health Check
+									Phone
+									Health
+									Check
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Battery Health Check
+									Battery
+									Health
+									Check
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Check Device Details
+									Check
+									Device
+									Details
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Data Wipe
+									Data
+									Wipe
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Grade Your Phone
+									Grade
+									Your
+									Phone
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Data Transfer
+									Data
+									Transfer
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Data Backup
+									Data
+									Backup
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Fake Part Detection
+									Fake
+									Part
+									Detection
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Stolen Phone
+									Stolen
+									Phone
 								</NavigationMenuLink>
 							</NavigationMenuContent>
 						</NavigationMenuItem>
@@ -279,15 +348,19 @@ export default function Navbar() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
-							<NavigationMenuTrigger className={navigationMenuTriggerStyle()}>
+							<NavigationMenuTrigger
+								className={navigationMenuTriggerStyle()}
+							>
 								More
 							</NavigationMenuTrigger>
 							<NavigationMenuContent className="min-w-[200px] border-white bg-white font-semibold">
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									How To Sell
+									How To
+									Sell
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									How To Buy
+									How To
+									Buy
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
 									Blog
@@ -299,7 +372,8 @@ export default function Navbar() {
 									About Us
 								</NavigationMenuLink>
 								<NavigationMenuLink className="block w-full px-4 py-2 hover:bg-gray-200">
-									Contact Us
+									Contact
+									Us
 								</NavigationMenuLink>
 							</NavigationMenuContent>
 						</NavigationMenuItem>
@@ -307,5 +381,5 @@ export default function Navbar() {
 				</NavigationMenu>
 			</div>
 		</nav>
-	)
+	);
 }

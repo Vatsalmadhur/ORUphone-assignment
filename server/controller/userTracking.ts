@@ -3,10 +3,17 @@ import { UserSession } from "../db/entities/UserSession.entity";
 import { UserVisit } from "../db/entities/UserVisit.entity";
 import { VisitAction } from "../db/entities/VisitAction.entity";
 import { useTypeORM } from "../db/typeorm";
+import { body, validationResult } from "express-validator";
+
 
 export default async function userTracking(req: Request, res: Response): Promise<void> {
   if (!req.session?.userData) {
     res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
+const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    res.status(400).json({ errors: errors.array() });
     return;
   }
 

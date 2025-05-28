@@ -5,6 +5,9 @@ import DashCard from "@/components/common/dashCard";
 import React, { useEffect, useState, Suspense } from "react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/context/AuthContext";
+import { BrowserDataChart } from "@/components/common/charts/browserDataChart";
+import { OsDataChart } from "@/components/common/charts/osDataCharts";
+import { LocationChart } from "@/components/common/charts/locationChart";
 
 interface AnalyticsResponse {
   totalUniqueVisits: number;
@@ -15,13 +18,20 @@ interface AnalyticsResponse {
   deviceCategories: { category: string; count: number }[];
   loggedStatusStats: { count: number }[];
   avgSessionsPerUser: number;
+  processedBrowserData: ChartData[];
+  processedOsData: ChartData[];
+  processedLocationData: ChartData[];
 }
-
+export interface ChartData {
+  name: string;
+  count: number;
+}
 export default function AdminDashboard() {
   const [data, setData] = useState<AnalyticsResponse | null>(null);
   const [startDate, setStartDate] = useState("2025-05-26");
   const [endDate, setEndDate] = useState("");
   const { isAdmin } = useAuth();
+
   const fetchAnalytics = () => {
     if (!startDate || !endDate) {
       alert("Please select both start and end dates.");
@@ -37,6 +47,7 @@ export default function AdminDashboard() {
         .catch((err) => console.error("Failed to fetch analytics:", err));
     }
   };
+
   useEffect(() => {
     const today = new Date();
     const format = (d: Date) => d.toISOString().slice(0, 10);
@@ -50,12 +61,12 @@ export default function AdminDashboard() {
   return (
     <>
       {isAdmin ? (
-        <div className="p-6 max-w-6xl mx-auto space-y-8">
+        <div className="p-6 w-screen flex items-center justify-center flex-col mx-auto space-y-8">
           <h1 className="text-4xl text-gray-700 font-bold text-center">
             Admin Analytics Dashboard
           </h1>
 
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+          <div className="flex flex-col md:flex-row justify-center items-center gap-4 ">
             <div className="flex flex-col">
               <label className="text-sm text-gray-500">Start Date</label>
               <input
@@ -105,46 +116,54 @@ export default function AdminDashboard() {
                   value={data.avgSessionsPerUser.toFixed(2)}
                 />
               </div>
+              <div className="flex md:items-start md:justify-center md:w-5xl w-[90vw] flex-wrap flex-col md:flex-row text-center">
+                <div className=" flex flex-col  gap-16">
+                  <Section title="Top 10 Visited Pages">
+                    <List
+                      data={data.topPages}
+                      keyLabel="pageUrl"
+                      valueLabel="visitCount"
+                    />
+                  </Section>
 
-              <Section title="Top 10 Visited Pages">
-                <List
-                  data={data.topPages}
-                  keyLabel="pageUrl"
-                  valueLabel="visitCount"
-                />
-              </Section>
+                  <Section title="Average Time Spent on Pages (sec)">
+                    <List
+                      data={data.avgTimeSpent}
+                      keyLabel="pageUrl"
+                      valueLabel="avgTime"
+                    />
+                  </Section>
 
-              <Section title="Average Time Spent on Pages (sec)">
-                <List
-                  data={data.avgTimeSpent}
-                  keyLabel="pageUrl"
-                  valueLabel="avgTime"
-                />
-              </Section>
+                  <Section title="Top Devices">
+                    <List
+                      data={data.topDevices}
+                      keyLabel="device"
+                      valueLabel="count"
+                    />
+                  </Section>
 
-              <Section title="Top Devices">
-                <List
-                  data={data.topDevices}
-                  keyLabel="device"
-                  valueLabel="count"
-                />
-              </Section>
+                  <Section title="Top Clicked Buttons">
+                    <List
+                      data={data.topClickedElements}
+                      keyLabel="element"
+                      valueLabel="clicks"
+                    />
+                  </Section>
 
-              <Section title="Top Clicked Buttons">
-                <List
-                  data={data.topClickedElements}
-                  keyLabel="element"
-                  valueLabel="clicks"
-                />
-              </Section>
-
-              <Section title="Popular Device Categories">
-                <List
-                  data={data.deviceCategories}
-                  keyLabel="category"
-                  valueLabel="count"
-                />
-              </Section>
+                  <Section title="Popular Device Categories">
+                    <List
+                      data={data.deviceCategories}
+                      keyLabel="category"
+                      valueLabel="count"
+                    />
+                  </Section>
+                </div>
+                <div className=" min-w-[400px] flex flex-col items-center justify-center gap-4 text-center">
+                  <BrowserDataChart data={data.processedBrowserData} />
+                  <OsDataChart data={data.processedOsData} />
+                  <LocationChart data={data.processedLocationData} />
+                </div>
+              </div>
             </>
           )}
         </div>

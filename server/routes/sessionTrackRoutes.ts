@@ -1,8 +1,11 @@
-import { Request, Response, Router } from "express";
+import { NextFunction, Request, Response, Router } from "express";
 import userTracking from "../controller/userTracking";
 import { login, logout, register } from "../controller/authController";
 import { getAnalyticsReport } from "../controller/adminController";
 import isAdmin from "../middlewares/admin"
+import { validateUserTracking,validateLogin,validateSignup } from "../middlewares/validation";
+import { validationResult } from "express-validator";
+import { adminRateLimiter, authRateLimiter } from "../middlewares/rate-limit";
 const router = Router();
 router.get("/session", (req: Request, res: Response) => {
     if (!req.session.userData) {
@@ -12,10 +15,39 @@ router.get("/session", (req: Request, res: Response) => {
 
      res.json(req.session.userData);
 });
-
-router.post('/usertrack',userTracking)
-router.post('/register',register);
-router.post('/login',login)
+router.post(
+  '/usertrack',
+  validateUserTracking,
+  (req: Request, res: Response, next: NextFunction): void => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    next();
+  },
+  userTracking
+);
+router.post('/register',authRateLimiter,  validateSignup,
+  (req: Request, res: Response, next: NextFunction): void => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    next();
+  },
+register);
+router.post('/login',authRateLimiter,  validateLogin,
+  (req: Request, res: Response, next: NextFunction): void => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+      return;
+    }
+    next();
+  },
+login)
 router.post('/logout',logout);
-router.get('/admin/analytics',isAdmin,getAnalyticsReport)
+router.get('/admin/analytics',adminRateLimiter, isAdmin,getAnalyticsReport)
 export default router;
