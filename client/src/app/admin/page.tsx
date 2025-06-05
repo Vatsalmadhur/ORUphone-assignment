@@ -105,7 +105,7 @@ export default function AdminDashboard() {
                 />
                 <DashCard
                   title="Logged In"
-                  value={data.loggedStatusStats[1].count}
+                  value={data.loggedStatusStats?.[1]?.count ?? 0}
                 />
                 <DashCard
                   title="Logged Out"
