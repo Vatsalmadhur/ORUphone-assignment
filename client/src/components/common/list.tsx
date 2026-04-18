@@ -13,13 +13,13 @@ export default function List<T>({
       {data.map((item, index) => (
         <li key={index} className="flex justify-between">
           <span className="font-semibold text-gray-600">
-            {decodeURIComponent(String(item[keyLabel]))}
+            {String(item[keyLabel])}
           </span>
           <span className="font-bold text-[var(--custom-yellow-dark)]">
             {(() => {
-          const value = Number(item?.[valueLabel]);
-          return Number.isInteger(value) ? value : value.toFixed(2);
-        })()}
+              const value = Number(item?.[valueLabel]);
+              return Number.isInteger(value) ? value : value.toFixed(2);
+            })()}
           </span>
         </li>
       ))}

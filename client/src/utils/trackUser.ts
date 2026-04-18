@@ -16,7 +16,7 @@ export function trackUser(sessionId:string, page:string){
 
   const tag = target.tagName;
     const text= target.innerText?.slice(0,50);
-    clickEvents.push(`Click: <${tag}> ${text}`);
+    clickEvents.push(`Click: ${tag} ${text}`);
   });
 
   document.addEventListener('scroll',function(){

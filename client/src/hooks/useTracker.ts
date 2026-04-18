@@ -55,6 +55,7 @@ export function useTracker() {
       const tag = target.tagName;
       const text = target.textContent?.slice(0, 50) || "";
       trackingData.current.clickEvents.push(`Click: <${tag}> ${text}`);
+console.log(target.tagName,target.textContent);
     };
 
     const handleScroll = () => {
@@ -87,7 +88,8 @@ export function useTracker() {
   // Handle page navigation
   useEffect(() => {
     const newPage = `${pathname || ""}${searchParams ? `?${searchParams.toString()}` : ""}`;
-
+// const newPage = pathname + (searchParams?.size ? `?${searchParams.toString()}` : "");
+console.log("newpage",newPage)
     if (previousPathRef.current !== newPage) {
       sendTrackingData(previousPathRef.current).finally(() => {
         trackingData.current = {
@@ -134,6 +136,8 @@ export function useTracker() {
   // Data sending functions
   const sendBatchData = async (data: TrackingData[]): Promise<boolean> => {
     try {
+console.log("data before sending string",JSON.stringify(data));
+console.log("data before sending",data);
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_BASE_URL}/usertrack`,
         {

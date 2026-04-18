@@ -2,21 +2,25 @@ import { NextFunction, Request, Response, Router } from "express";
 import userTracking from "../controller/userTracking";
 import { login, logout, register } from "../controller/authController";
 import { getAnalyticsReport } from "../controller/adminController";
-import isAdmin from "../middlewares/admin"
-import { validateUserTracking,validateLogin,validateSignup } from "../middlewares/validation";
+import isAdmin from "../middlewares/admin";
+import {
+  validateUserTracking,
+  validateLogin,
+  validateSignup,
+} from "../middlewares/validation";
 import { validationResult } from "express-validator";
 import { adminRateLimiter, authRateLimiter } from "../middlewares/rate-limit";
 const router = Router();
 router.get("/session", (req: Request, res: Response) => {
-    if (!req.session.userData) {
-         res.status(401).json({ error: "Unauthorized" });
-        return;
-    }
+  if (!req.session.userData) {
+    res.status(401).json({ error: "Unauthorized" });
+    return;
+  }
 
-     res.json(req.session.userData);
+  res.json(req.session.userData);
 });
 router.post(
-  '/usertrack',
+  "/usertrack",
   validateUserTracking,
   (req: Request, res: Response, next: NextFunction): void => {
     const errors = validationResult(req);
@@ -28,7 +32,10 @@ router.post(
   },
   userTracking
 );
-router.post('/register',authRateLimiter,  validateSignup,
+router.post(
+  "/register",
+  authRateLimiter,
+  validateSignup,
   (req: Request, res: Response, next: NextFunction): void => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -37,8 +44,12 @@ router.post('/register',authRateLimiter,  validateSignup,
     }
     next();
   },
-register);
-router.post('/login',authRateLimiter,  validateLogin,
+  register
+);
+router.post(
+  "/login",
+  authRateLimiter,
+  validateLogin,
   (req: Request, res: Response, next: NextFunction): void => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -47,7 +58,8 @@ router.post('/login',authRateLimiter,  validateLogin,
     }
     next();
   },
-login)
-router.post('/logout',logout);
-router.get('/admin/analytics',adminRateLimiter, isAdmin,getAnalyticsReport)
+  login
+);
+router.post("/logout", logout);
+router.get("/admin/analytics", adminRateLimiter, isAdmin, getAnalyticsReport);
 export default router;

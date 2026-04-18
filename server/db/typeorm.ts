@@ -12,12 +12,11 @@ export default async function typeORMConnect(): Promise<void> {
     ],
     synchronize: true,
   });
-
   typeORMDB = await dataSource.initialize();
   console.log("TypeORM connected to the database");
 }
 
-export const getDataSource = (): DataSource => typeORMDB
+export const getDataSource = (): DataSource => typeORMDB;
 
 export function useTypeORM(
   entity: EntityTarget<ObjectLiteral>

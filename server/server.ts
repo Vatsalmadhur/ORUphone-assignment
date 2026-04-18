@@ -19,8 +19,8 @@ app.use(cors({
 app.use(express.json());
 const redisClient = new Redis(
 	{
-		host:process.env.REDIS_URL,
-		port:19635,
+		host:"localhost",
+		port:6379,
 		username: 'default',
     password: process.env.REDIS_PASSWORD,
 	}

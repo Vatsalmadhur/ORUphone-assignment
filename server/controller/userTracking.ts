@@ -16,7 +16,7 @@ const errors = validationResult(req);
     res.status(400).json({ errors: errors.array() });
     return;
   }
-
+console.log("body is")
   const event = req.body[0];
   const sessionData = req.session.userData;
   const sessionRepo = useTypeORM(UserSession);
@@ -68,7 +68,7 @@ const errors = validationResult(req);
     if (actions.length > 0) {
       await actionRepo.save(actions);
     }
-
+console.log("newVisist",newVisit);
     res.json({ message: "Tracking data saved successfully" });
   } catch (error) {
     console.error("Error saving tracking data:", error);

@@ -47,7 +47,7 @@ export default function AdminDashboard() {
         .catch((err) => console.error("Failed to fetch analytics:", err));
     }
   };
-
+console.log("data is ", data);
   useEffect(() => {
     const today = new Date();
     const format = (d: Date) => d.toISOString().slice(0, 10);

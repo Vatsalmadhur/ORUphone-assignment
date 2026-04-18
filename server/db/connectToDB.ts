@@ -4,7 +4,7 @@ import {Client, QueryResult, QueryResultRow} from "pg";
 	password: process.env.POSTGRES_PASS,
 	host: process.env.PG_HOST,
 	port:Number( process.env.PG_PORT || "5432") ,
-	database: "oru_user_tracking",
+	database: "oru_user_tracking_2j8d",
 	ssl: true
 
 });

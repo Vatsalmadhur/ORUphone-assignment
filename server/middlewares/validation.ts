@@ -1,8 +1,8 @@
 import {body, query} from 'express-validator';
 export const validateUserTracking = [
   body('[0].clicks').isArray().withMessage('clicks must be an array'),
-  body('[0].clicks.*').isString().trim().escape(),
-  body('[0].page').isString().trim().escape(),
+  body('[0].clicks.*').isString().trim(),
+  body('[0].page').isString().trim(),
   body('[0].scrollDepth').isNumeric().withMessage('scrollDepth must be a number'),
   body('[0].timeSpent').isNumeric().withMessage('timeSpent must be a number'),
   body('[0].timestamp').isInt({ min: 0 }).withMessage('timestamp must be a valid number')
